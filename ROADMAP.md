@@ -19,6 +19,12 @@ VERIFIED.md with live measurements.
 
 Trigger: a Linux host with intel-compute-runtime + clinfo + Level Zero.
 
+- [x] **program-binary ISA cache (shipped — family F4/A2):**
+      `tools/isa_cache.c` compiles the fixture kernel through the vendor
+      driver, captures the DRIVER-COMPILED binary via
+      `CL_PROGRAM_BINARIES`, caches it, and reload-verifies with
+      `clCreateProgramWithBinary` — warm launches never compile IR (the
+      sanctioned thin path; proven live, honest PENDING without a device)
 - [ ] host-load: `clCreateProgramWithIL(build/arc-a770/vectorAdd.spv)` +
       launch, element-verified vs CPU truth (the v1 acceptance suite)
 - [ ] Xe core census: grid-stride + local-memory reduction across EUs
