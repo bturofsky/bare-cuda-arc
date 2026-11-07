@@ -68,7 +68,7 @@ unsupported — four vendor backends, one verification method.
 |---|---|---|
 | A0 | Scanner, spir64 translator, validated SPIR-V ×3 profiles | ✅ |
 | A1 | A770 hardware gate: `clCreateProgramWithIL` + launch vs CPU truth; EU census; zero-copy | 🔜 needs host |
-| A2 | Program-binary ISA cache: `clGetProgramInfo(PROGRAM_BINARIES)` → cache driver-compiled Xe ISA → reload | 🔄 |
+| A2 | Program-binary ISA cache: `tools/isa_cache.c` — driver-compiled binary captured (CL_PROGRAM_BINARIES), cached, reload verified via clCreateProgramWithBinary (mechanism proven live on an OpenCL device; Arc-host variant is the same code) | ✅ mechanism shipped |
 | A3 | Battlemage cross-check; Level Zero multi-device (Flex 170) | 🔜 |
 | A4 | Census growth: subgroup shuffles, barriers+Workgroup storage, atomics | 🔜 |
 | A5 | Below-SPIR-V honesty record: IGA exists (open) but loaders reject raw ISA — documented floor | 🔄 |

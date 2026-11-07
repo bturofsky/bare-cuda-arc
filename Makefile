@@ -34,9 +34,18 @@ SPIRV_D  := spirv-dis
 
 BUILD := build/$(ACTIVE_TARGET)
 
-.PHONY: all targets select doctor scan aot aot-all test clean
+.PHONY: all targets select doctor scan aot aot-all isa-cache test clean
 
-all: doctor scan aot
+all: doctor scan aot isa-cache
+
+# F4/A2 — the program-binary ISA cache: compile once through the vendor
+# driver, capture the DRIVER-COMPILED binary (CL_PROGRAM_BINARIES), cache,
+# reload. Warm launches never compile IR. Honest PENDING when no device.
+isa-cache: tools/isa_cache.bin
+	@./tools/isa_cache.bin
+
+tools/isa_cache.bin: tools/isa_cache.c
+	$(CC) -O2 -std=c11 -Wall -Wextra -Werror -Wno-deprecated-declarations -framework OpenCL -o $@ tools/isa_cache.c
 
 targets:
 	@echo "Bare CUDA Arc — target pull-down"
