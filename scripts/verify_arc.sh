@@ -26,6 +26,9 @@ echo "    1. host-load: clCreateProgramWithIL of build/arc-a770/vectorAdd.spv +"
 echo "       clSetKernelArg + launch, element-verified vs CPU truth"
 echo "    2. Xe core census: grid-stride + local-memory reduction across EUs"
 echo "    3. zero-copy: CL_MEM_ALLOC_HOST_PTR path vs device copy"
-echo "    4. Level Zero multi-device lane (Flex 170 class)"
+echo "    4. Level Zero multi-device lane (Flex 170 class)
+    provenance receipts (A1 contract): every launch writes one JSON line —
+      {device, kernel, grid, block, gpu_start, gpu_end, status, artifact}
+      — validated by the suite before any result claim is recorded."
 echo "  implementation lands with the host (ROADMAP.md phase 2) — nothing to fake here."
 exit 0

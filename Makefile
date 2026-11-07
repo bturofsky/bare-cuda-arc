@@ -34,9 +34,18 @@ SPIRV_D  := spirv-dis
 
 BUILD := build/$(ACTIVE_TARGET)
 
-.PHONY: all targets select doctor scan aot aot-all isa-cache test clean
+.PHONY: all targets select doctor scan aot aot-all isa-cache perf-gate negative test clean
 
-all: doctor scan aot isa-cache
+all: doctor scan aot isa-cache perf-gate
+
+# F5 — SPIR-V ISA-proxy performance report: translated kernel vs
+# native-quality baseline, Op-instruction counts (static, non-gating until A1).
+perf-gate: translator/ptx2llvm.bin
+	@bash test/perf_gate.sh
+
+# Honest-error contract under hostile inputs (translator + scanner).
+negative: translator/ptx2llvm.bin scan/arcscan
+	@bash test/negative_arc.sh
 
 # F4/A2 — the program-binary ISA cache: compile once through the vendor
 # driver, capture the DRIVER-COMPILED binary (CL_PROGRAM_BINARIES), cache,

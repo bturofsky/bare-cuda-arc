@@ -46,3 +46,10 @@ Trigger: a Linux host with intel-compute-runtime + clinfo + Level Zero.
 
 Shared acceptance harness across Bare CUDA Metal / ROCm / Arc / Adreno —
 one CUDA workload spec, four native backends, one verification record.
+
+## A6 (roadmap): the source lane
+
+Unmodified CUDA C++ / OpenCL C source compilation: `clang -x cl --target=spir64`
+(the LLVM SPIR-V path needs only the OpenCL headers, not a full vendor SDK)
+-> SPIR-V -> our existing validator + harness. Host-gated (A1 hardware
+first); staged here honestly rather than faked.

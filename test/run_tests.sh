@@ -101,6 +101,18 @@ grep -q "arc-a770" build/targets.txt && grep -q "arc-b580" build/targets.txt && 
   && ok "all three GPUs listed" || bad "pull-down incomplete"
 grep -q "spv1.5" build/targets.txt && ok "SPIR-V env profiles mapped" || bad "env mapping missing"
 
+hr "SPIR-V ISA-proxy performance report (F5, static)"
+bash test/perf_gate.sh > build/perfproxy.txt 2>/dev/null
+rc=$?
+grep "ratio" build/perfproxy.txt | sed 's/^/    /'
+[ $rc -eq 0 ] && ok "baseline + translated both spirv-val clean; static ratio reported (GPU-clock gate at A1)" || bad "perf proxy failed"
+
+hr "negative-test inventory (honest-error contract)"
+bash test/negative_arc.sh > build/negarc.txt 2>&1
+rc=$?
+grep -c "PASS" build/negarc.txt | head -1 | sed 's/^/    passed cases: /'
+[ $rc -eq 0 ] && ok "all hostile inputs produce the named hard-fail contract" || bad "negative inventory failed"
+
 hr "ISA cache — the sanctioned thin path (F4/A2)"
 make --no-print-directory tools/isa_cache.bin > /dev/null 2>&1
 check "isa_cache builds warning-free" $?
