@@ -89,6 +89,23 @@ Adding a GPU is one `targets/<name>.mk` file.
    storage, and pass `spirv-val` at the target's env — or the gate fails.
    The validator itself is negative-tested.
 
+## What "bare" rules out — four structural guarantees
+
+- **No runtime API interception or hooking.** The v0 pipeline is a pure
+  compiler lane (scanner → translator → LLVM → SPIR-V); nothing watches or
+  patches a driver. The hardware gate will consume the artifact through
+  Intel's own OpenCL/Level Zero APIs — the vendor's official path.
+- **No interpreter, no per-call bytecode translation.** Kernels are
+  translated once, ahead of time, into validated SPIR-V binaries. No
+  translator exists anywhere on the execution path.
+- **No wrapper emulating the CUDA driver.** No emulation layer: the
+  artifacts are ordinary OpenCL-kernel SPIR-V modules consumed by
+  intel-compute-runtime exactly like any natively-built OpenCL/Vulkan
+  binary.
+- **Unsupported PTX → hard-fail with the opcode named.** `ptx2llvm` exits 2
+  with the opcode on stderr — proven by the honesty test in the 27-check
+  harness. A slow-but-wrong fallback is structurally impossible.
+
 ## What runs today vs. what's next
 
 - **Today (v0):** scanner over real nvcc fatbins, PTX→LLVM IR translation of
